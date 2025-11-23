@@ -45,9 +45,14 @@ AI-powered beverage companion that suggests drinks based on your mood.
 - **npm** - Package management
 
 ---
-
+## Screenshots 
+### Homepage
 <img src="homepage.png"/>
 
+### AI Chat Page
+<img src="aichatbox.png"/>
+
+---
 ## Architecture
 
 ### Application Structure
@@ -143,4 +148,5 @@ TheBevBooth/
 
 | **Name** | Dhruv Gupta |
 | **Email** | dhruvgupta3035@gmail.com |
+
 
