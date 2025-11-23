@@ -146,8 +146,9 @@ TheBevBooth/
 
 ## Developer Contact
 
-**Name**: Dhruv Gupta
-**Email**: dhruvgupta3035@gmail.com
+**Name**: Dhruv Gupta <br>
+**Email**: dhruvgupta3035@gmail.com <br>
 **Linkedin**: https://www.linkedin.com/in/dhruvgupta007/
+
 
 
