@@ -1,0 +1,23 @@
+{
+  "name": "dhruvdrinks",
+  "version": "1.0.0",
+  "description": "TheBevBooth - AI-powered beverage companion",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site - no build step required'",
+    "start": "echo 'Static site - no start script required'"
+  },
+  "keywords": [
+    "beverage",
+    "ai",
+    "drinks",
+    "non-alcoholic",
+    "mood-based"
+  ],
+  "author": "Dhruv Gupta",
+  "license": "MIT",
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  }
+}

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BevBae - AI Chat | TheBevBooth</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .ai-chat {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 80vh;
+      padding: 3rem 0;
+      background: linear-gradient(135deg, #232526 0%, #414345 100%);
+      overflow: hidden;
+    }
+    .chat-bg-decor {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.3;
+      filter: blur(2px);
+      animation: float 8s infinite ease-in-out;
+    }
+    .bubble1 {
+      width: 120px; height: 120px;
+      background: radial-gradient(circle, #f0c040 60%, #fff0 100%);
+      top: 10%; left: 8%;
+      animation-delay: 0s;
+    }
+    .bubble2 {
+      width: 80px; height: 80px;
+      background: radial-gradient(circle, #40c0f0 60%, #fff0 100%);
+      bottom: 15%; right: 12%;
+      animation-delay: 2s;
+    }
+    .bubble3 {
+      width: 60px; height: 60px;
+      background: radial-gradient(circle, #e2b630 60%, #fff0 100%);
+      top: 60%; left: 70%;
+      animation-delay: 4s;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-30px); }
+    }
+    .glass {
+      position: relative;
+      z-index: 1;
+      background: rgba(30, 30, 30, 0.7);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 2px solid rgba(240, 192, 64, 0.2);
+      padding: 2.5rem 2rem 1.5rem 2rem;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      animation: popIn 1s cubic-bezier(.68,-0.55,.27,1.55);
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .chat-title {
+      font-size: 1.5rem;
+      color: #f0c040;
+      margin-bottom: 1.2rem;
+      text-shadow: 0 2px 8px #0008;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+    .chat-messages {
+      min-height: 250px;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 1.5rem;
+      background: rgba(41, 41, 41, 0.7);
+      border-radius: 12px;
+      padding: 1.2rem;
+      color: #fff;
+      font-size: 1rem;
+      box-shadow: 0 2px 8px #0003;
+    }
+    .chat-input-area {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    #user-input {
+      flex: 1;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      outline: none;
+      box-shadow: 0 1px 4px #0002;
+      transition: background-color 0.2s ease;
+    }
+    #user-input:focus {
+      background: rgba(255,255,255,0.18);
+    }
+    .chat-input-area button {
+      background: #f0c040;
+      color: #000;
+      border: none;
+      padding: 0.01rem 1rem;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #0002;
+      transition: background-color 0.3s ease, transform 0.2s;
+    }
+    .chat-input-area button:hover {
+      background: linear-gradient(90deg, #e2b630 60%, #40c0f0 100%);
+      transform: scale(1.05);
+    }
+    .user-msg, .ai-msg {
+      margin-bottom: 0.5rem;
+      padding: 0.3rem 0.5rem;
+      border-radius: 6px;
+      background: rgba(240,192,64,0.08);
+      box-shadow: 0 1px 4px #0001;
+    }
+    .ai-msg {
+      margin-bottom: 1rem;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      background: rgba(240,192,64,0.08);
+      box-shadow: 0 1px 4px #0001;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .buy-btn {
+      display: inline-block;
+      text-decoration: none;
+      background:#f0c040;
+      color: #000;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+      width: fit-content;
+      margin-top: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    .buy-btn:hover {
+      background: #e2b630;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .user-msg b {
+      color: #f0c040;
+    }
+    .ai-msg b {
+      color: #40c0f0;
+    }
+    .chat-container {
+      background: #1e1e1e;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      padding: 2rem;
+      width: 100%;
+      max-width: 800px;
+      min-width: 350px;
+    }
+    @media (max-width: 600px) {
+      .glass {
+        padding: 1.2rem 0.5rem 1rem 0.5rem;
+        max-width: 98vw;
+      }
+      .chat-title {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="logo.png" alt="TheBevBooth Logo" />
+      <div class="logo-text">
+        <span>TheBevBooth</span>
+        <span class="author-name">  Dhruv Gupta</span>
+      </div>
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="bevbae.html">BevBae</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="ai-chat">
+    <div class="chat-bg-decor">
+      <div class="bubble bubble1"></div>
+      <div class="bubble bubble2"></div>
+      <div class="bubble bubble3"></div>
+    </div>
+    <div class="chat-container glass">
+      <h2 class="chat-title">Ask our AI 'BevBae': What drink suits your mood?</h2>
+      <div id="chat-messages" class="chat-messages"></div>
+      <div class="chat-input-area">
+        <input type="text" id="user-input" placeholder="Describe your mood..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Gemini AI Integration
+    // API key is now stored securely in Vercel environment variables
+    // The API call is proxied through /api/gemini serverless function
+    let previousDrinks = [];
+
+    // Mood-based drink suggestions map
+    const moodDrinks = {
+      sad: ['Hot Chocolate (warm comfort)', 'Strawberry Banana Smoothie (mood lifting)', 'Rose Milk (gentle soothing)'],
+      stress: ['Green Tea (calming)', 'Lavender Lemonade (relaxing)', 'Coconut Water (refreshing)'],
+      breakup: ['Dark Hot Chocolate (emotional comfort)', 'Mango Passion Smoothie (mood boosting)', 'Vanilla Milkshake (sweet comfort)'],
+      happy: ['Berry Blast Smoothie (celebratory)', 'Virgin Mojito (festive)', 'Tropical Punch (uplifting)'],
+      tired: ['Cold Brew Coffee (energizing)', 'Green Apple Juice (refreshing)', 'Pomegranate Juice (revitalizing)'],
+      angry: ['Cucumber Mint Cooler (cooling)', 'Watermelon Juice (calming)', 'Peach Iced Tea (soothing)'],
+      bored: ['Rainbow Smoothie (exciting)', 'Blue Lagoon Mocktail (fun)', 'Mixed Berry Slush (entertaining)']
+    };
+
+    async function getGeminiSuggestion(mood, promptOverride) {
+      // Use the provided prompt override if available, otherwise construct one
+      let prompt;
+      
+      if (promptOverride) {
+        prompt = promptOverride;
+      } else {
+        const baseMood = mood.toLowerCase().match(/(sad|stress|breakup|happy|tired|angry|bored)/)?.[0] || 'neutral';
+        
+        // Get suggestions excluding previous drinks
+        const availableDrinks = moodDrinks[baseMood]?.filter(drink => 
+          !previousDrinks.some(prev => drink.toLowerCase().includes(prev.toLowerCase()))
+        ) || moodDrinks.happy;
+
+        prompt = `
+You are BevBae, a friendly beverage expert. The user ${userName} is feeling "${mood}".
+Choose ONE drink from these mood-appropriate options (do not suggest anything else):
+${availableDrinks.join(', ')}
+
+Requirements:
+- Use ${userName}'s name in your response
+- Be empathetic and friendly
+- Suggest only ONE drink from the given options
+- Give a brief reason why it suits their mood
+- Reply in exactly 2 lines
+- Do NOT mention other drinks
+- Do NOT suggest Chamomile Tea or any drink not in the list
+
+Previous suggestions to avoid: ${previousDrinks.join(', ')}
+`;
+      }
+      
+      try {
+        // Call our serverless function which securely handles the API key
+        const res = await fetch('/api/gemini', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ prompt })
+        });
+        
+        const data = await res.json();
+        
+        if (!res.ok) {
+          return `API Error: ${data.error || 'Unknown error.'}`;
+        }
+        
+        if (data.text) {
+          return data.text;
+        }
+        
+        return `Unexpected response: ${JSON.stringify(data)}`;
+      } catch (err) {
+        return `Error connecting to AI service: ${err.message}`;
+      }
+    }
+
+    // Multi-step chat state
+    let chatStep = 0; // 0: ask name, 1: ask mood, 2: suggest drink
+    let userName = '';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const chat = document.getElementById('chat-messages');
+      chat.innerHTML = `<div class='ai-msg'><b>BevBae:</b> Hello I'm BevBae! Please enter your name.</div>`;
+      chatStep = 0;
+      // Allow sending message with Enter key
+      const input = document.getElementById('user-input');
+      if (input) {
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+      }
+    });
+
+    async function sendMessage() {
+      const input = document.getElementById('user-input');
+      const chat = document.getElementById('chat-messages');
+      const userText = input.value.trim();
+      if (!userText) return;
+      chat.innerHTML += `<div class='user-msg'><b>You:</b> ${userText}</div>`;
+      chat.scrollTop = chat.scrollHeight;
+      input.value = '';
+
+      if (chatStep === 0) {
+        // Improved name extraction
+        let name = '';
+        let match = userText.match(/(?:i am|i'm|my name is)\s+([A-Za-z]+)/i);
+        if (match && match[1]) {
+          name = match[1];
+        } else {
+          // Fallback: use the last word if it's a single word
+          let words = userText.trim().split(/\s+/);
+          if (words.length === 1) {
+            name = words[0];
+          } else {
+            // Try to find a capitalized word (likely a name)
+            let cap = words.find(w => /^[A-Z][a-z]+$/.test(w));
+            name = cap || words[words.length-1];
+          }
+        }
+        userName = name;
+        chat.innerHTML += `<div class='ai-msg'><b>BevBae:</b> Hi ${userName}! How are you feeling right now? Tell me about your mood.</div>`;
+        chat.scrollTop = chat.scrollHeight;
+        chatStep = 1;
+        return;
+      }
+
+      if (chatStep === 1) {
+        // Ask Gemini for a drink suggestion using the name and mood
+        chat.innerHTML += `<div class='ai-msg'><b>BevBae:</b> <span class='ai-loading'>Thinking...</span></div>`;
+        chat.scrollTop = chat.scrollHeight;
+        const prompt = `Console and comfort the user named ${userName} in a friendly human manner, then suggest only one non-alcoholic beverage for their mood: "${userText}". Only recommend healthy, refreshing, or comforting non-alcoholic drinks like herbal teas, fruit juices, smoothies, mocktails, or similar. Do NOT suggest any alcoholic drinks. Reply in max 2 lines, use their name, and mention only the drink name and a brief reason. Do not list multiple drinks.`;
+        const aiReply = await getGeminiSuggestion(userText, prompt);
+
+        // Extract drink name and add Buy Now button
+        let drink = '';
+        let lowerReply = aiReply.toLowerCase();
+        for (const [mood, drinks] of Object.entries(moodDrinks)) {
+          for (const drinkOption of drinks) {
+            const drinkName = drinkOption.split(' (')[0].toLowerCase();
+            if (lowerReply.includes(drinkName)) {
+              drink = drinkName;
+              break;
+            }
+          }
+          if (drink) break;
+        }
+
+        // Add Buy Now button with link to product page
+        let buyBtn = '';
+        if (drink) {
+          // Convert drink name to URL-friendly format
+          const drinkSlug = drink.replace(/\s+/g, '-').toLowerCase();
+          buyBtn = `<a href='coming-soon.html' class='buy-btn'>Buy Now</a>`;
+        }
+
+        // Update AI message with button
+        const cleanReply = aiReply.replace(/\*\*/g, '');
+        const aiMsgs = chat.getElementsByClassName('ai-msg');
+        if (aiMsgs.length) {
+          aiMsgs[aiMsgs.length-1].innerHTML = `<b>BevBae:</b> ${cleanReply}${buyBtn}`;
+        }
+        chat.scrollTop = chat.scrollHeight;
+        chatStep = 2;
+        // Add the new drink to previous suggestions
+        if (drink && !previousDrinks.includes(drink)) {
+          previousDrinks.push(drink);
+        }
+        return;
+      }
+
+      // After suggestion, just echo user input as before
+      chat.innerHTML += `<div class='ai-msg'><b>BevBae:</b> If you want another suggestion, please refresh the page!</div>`;
+      chat.scrollTop = chat.scrollHeight;
+    }
+  </script>
+</body>
+</html>
