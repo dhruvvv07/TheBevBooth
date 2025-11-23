@@ -46,6 +46,7 @@ AI-powered beverage companion that suggests drinks based on your mood.
 
 ---
 
+<img src="homepage.png"/>
 
 ## Architecture
 
@@ -142,3 +143,4 @@ TheBevBooth/
 
 | **Name** | Dhruv Gupta |
 | **Email** | dhruvgupta3035@gmail.com |
+
